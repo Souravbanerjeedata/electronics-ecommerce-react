@@ -4,24 +4,40 @@ import { AuthContext } from "../context/AuthContext";
 
 const Auth = () => {
   const [mode, setMode] = useState("sign up");
-  const { signup } = useContext(AuthContext);
+  const [error, setError] = useState(null);
+  const { signup, user, logout, login } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   function onSubmit(data) {
-    signup(data.email, data.password);
+    setError(null);
+    let result;
+    if (mode === "sign up") {
+      result = signup(data.email, data.password);
+    } else {
+      result = login(data.email, data.password);
+    }
+
+    if (result.success) {
+      alert("yay!");
+    } else {
+      setError(result.error);
+    }
   }
 
   return (
     <div className="page">
       <div className="container">
         <div className="auth-container">
+          {user && <p>{user.email} is logged in</p>}
+          <button onClick={() => logout()}>Logout</button>
           <h1 className="page-title">
             {mode === "sign up" ? "Sign Up" : "Login"}
           </h1>
           <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
+            {error && <div className="error-message">{error}</div>}
             <div className="form-group">
               <label className="form-label" htmlFor="email">
                 Email
