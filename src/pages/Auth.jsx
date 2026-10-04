@@ -7,7 +7,7 @@ const Auth = () => {
   const [mode, setMode] = useState("sign up");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { signup, user, logout, login } = useContext(AuthContext);
+  const { signup, login } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -33,8 +33,6 @@ const Auth = () => {
     <div className="page">
       <div className="container">
         <div className="auth-container">
-          {user && <p>{user.email} is logged in</p>}
-          <button onClick={() => logout()}>Logout</button>
           <h1 className="page-title">
             {mode === "sign up" ? "Sign Up" : "Login"}
           </h1>
