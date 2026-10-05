@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className="page">
       <div className="home-hero">
-        <h1 className="home-title">Welcome to ShopHub</h1>
+        <h1 className="home-title">Welcome to E-shop</h1>
         <p className="home-subtitle">
           Discover amazing electronic products at great prices
         </p>
