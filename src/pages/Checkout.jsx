@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 
 const Checkout = () => {
@@ -13,10 +14,25 @@ const Checkout = () => {
   const total = getCartTotal();
   const tax = cartItems.length > 0 ? 3.99 : 0;
 
+  const [showModal, setShowModal] = useState(false);
+
   function placeOrder() {
-    alert("Success, Order Placed!");
+    if (cartItems.length === 0) return;
+
     clearCart();
+    setShowModal(true);
   }
+
+  // Auto-hide the modal after 2 seconds
+  useEffect(() => {
+    if (!showModal) return;
+
+    const timer = setTimeout(() => {
+      setShowModal(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [showModal]);
 
   return (
     <div className="page">
@@ -25,47 +41,63 @@ const Checkout = () => {
         <div className="checkout-container">
           <div className="checkout-items">
             <h2 className="checkout-section-title">Order Summary</h2>
-            {cartItems.map((item) => (
-              <div className="checkout-item" key={item.id}>
-                <img
-                  src={item.product.image}
-                  alt={item.product.name}
-                  className="checkout-item-image"
-                />
-                <div className="checkout-item-details">
-                  <h3 className="checkout-item-name">{item.product.name}</h3>
-                  <p className="checkout-item-price">
-                    ${item.product.price} each
-                  </p>
-                </div>
-                <div className="checkout-item-controls">
-                  <div className="quantity-controls">
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+                <div className="checkout-item" key={item.id}>
+                  <img
+                    src={item.product.image}
+                    alt={item.product.name}
+                    className="checkout-item-image"
+                  />
+                  <div className="checkout-item-details">
+                    <h3 className="checkout-item-name">{item.product.name}</h3>
+                    <p className="checkout-item-price">
+                      ${item.product.price} each
+                    </p>
+                  </div>
+                  <div className="checkout-item-controls">
+                    <div className="quantity-controls">
+                      <button
+                        className="quantity-btn"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity - 1)
+                        }
+                      >
+                        -
+                      </button>
+                      <span className="quantity-value">{item.quantity}</span>
+                      <button
+                        className="quantity-btn"
+                        onClick={() =>
+                          updateQuantity(item.id, item.quantity + 1)
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                    <p className="checkout-item-total">
+                      ${(item.product.price * item.quantity).toFixed(2)}
+                    </p>
                     <button
-                      className="quantity-btn"
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      className="btn btn-secondary btn-small"
+                      onClick={() => removeFromCart(item.id)}
                     >
-                      -
-                    </button>
-                    <span className="quantity-value">{item.quantity}</span>
-                    <button
-                      className="quantity-btn"
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    >
-                      +
+                      Remove
                     </button>
                   </div>
-                  <p className="checkout-item-total">
-                    ${(item.product.price * item.quantity).toFixed(2)}
-                  </p>
-                  <button
-                    className="btn btn-secondary btn-small"
-                    onClick={() => removeFromCart(item.id)}
-                  >
-                    Remove
-                  </button>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: "1.2rem",
+                  margin: "5rem auto",
+                }}
+              >
+                Your cart is empty
+              </p>
+            )}
           </div>
 
           <div className="checkout-summary">
@@ -87,12 +119,24 @@ const Checkout = () => {
             <button
               className="btn btn-primary btn-large btn-block"
               onClick={placeOrder}
+              disabled={cartItems.length === 0}
             >
               Place Order
             </button>
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content success-modal">
+            <div className="modal-icon">✓</div>
+            <h2 className="modal-title">Your order is placed!</h2>
+            <p className="modal-message">Thank you for shopping with us.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
