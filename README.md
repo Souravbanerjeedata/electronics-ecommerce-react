@@ -4,7 +4,7 @@
 
 A modern, responsive electronics storefront built with React and Vite. Browse products, manage a shopping cart, place orders, and sign up / log in — all client-side with a clean UI.
 
-**Live:** [Souravbanerjeedata/electronics-ecommerce-react](https://github.com/Souravbanerjeedata/electronics-ecommerce-react)
+**Live:** [E-Shop](https://electronics-ecommerce-react.vercel.app/)
 
 ---
 
